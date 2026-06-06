@@ -47,3 +47,9 @@ npm run dev
 ```
 
 Visit `http://localhost:5173`
+
+## Screenshots
+
+![Dashboard](screenshots/dashboard.png)
+![Transactions](screenshots/transactions.png)
+![Charts](screenshots/charts.png)
