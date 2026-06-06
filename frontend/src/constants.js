@@ -1,0 +1,17 @@
+export const CATEGORY_COLORS = {
+  Groceries:          '#00c853',
+  Dining:             '#ff6b35',
+  Transport:          '#3d5afe',
+  Shopping:           '#ff9100',
+  Utilities:          '#1de9b6',
+  Housing:            '#2979ff',
+  Health:             '#ff1744',
+  Entertainment:      '#d500f9',
+  Subscriptions:      '#00e5ff',
+  Education:          '#ffd600',
+  Income:             '#00e676',
+  Transfers:          '#f50057',
+  Zelle:              '#6200ea',
+  'Credit Card Bill': '#ef4444',
+  Other:              '#ff6e40',
+}

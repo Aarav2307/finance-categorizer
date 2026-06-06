@@ -1,0 +1,36 @@
+# Real financial data — never commit these
+transaction_history.json
+recurring_cache.json
+cache.json
+accounts.json
+users.json
+zelle_names.json
+
+# Bank statements (real data)
+Statements/
+
+# Processed transaction history
+history/
+
+# Debug scripts
+debug_*.py
+
+# Secrets
+.env
+*.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+frontend/dist/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
