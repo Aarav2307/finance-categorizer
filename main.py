@@ -1244,6 +1244,61 @@ def get_dashboard(month: str = Query(default=None), _: str = Depends(require_aut
             },
         },
         "top_categories":      top_categories,
+        "category_count":      len(cat_totals),
         "upcoming_recurring":  upcoming[:5],
         "recent_transactions": recent,
+    }
+
+
+@app.get("/dashboard/transactions")
+def get_dashboard_transactions(
+    month: str = Query(...),
+    category: str = Query(default=None),
+    kind: str = Query(default=None),
+    _: str = Depends(require_auth),
+):
+    """Drill-down: transactions for a given month, optionally narrowed to a category or kind (spending/income)."""
+    from recurring import _parse_date
+
+    today = date_type.today()
+    try:
+        y, m = int(month[:4]), int(month[5:7])
+    except (ValueError, IndexError):
+        raise HTTPException(status_code=400, detail="month must be in YYYY-MM format")
+
+    EXCLUDED = {'Transfers', 'Credit Card Bill'}
+    all_txns = _load_all_transactions()
+
+    def get_dt(t):
+        return _parse_date(t.get("date"), today)
+
+    matches = []
+    for t in all_txns:
+        d = get_dt(t)
+        if d is None or d.year != y or d.month != m:
+            continue
+        if t.get("category") in EXCLUDED:
+            continue
+        if category and t.get("category") != category:
+            continue
+        if kind == 'spending' and t["amount"] >= 0:
+            continue
+        if kind == 'income' and t["amount"] <= 0:
+            continue
+        matches.append((t, d))
+
+    matches.sort(key=lambda x: x[1], reverse=True)
+
+    return {
+        "transactions": [
+            {
+                "date":         t.get("date"),
+                "display_name": t.get("display_name") or t.get("description"),
+                "description":  t.get("description"),
+                "amount":       t.get("amount"),
+                "category":     t.get("category"),
+                "account_name": t.get("account_name"),
+            }
+            for t, _ in matches
+        ],
     }

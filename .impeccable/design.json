@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-07T19:30:00.000Z",
+  "title": "Design System: Finance Categorizer",
+  "extensions": {
+    "colorMeta": {
+      "bg-base": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "oklch(13.5% 0.02 280)",
+        "tonalRamp": [
+          "oklch(10% 0.02 280)",
+          "oklch(13.5% 0.02 280)",
+          "oklch(17% 0.02 280)",
+          "oklch(24% 0.02 280)",
+          "oklch(38% 0.015 280)",
+          "oklch(55% 0.01 280)",
+          "oklch(75% 0.008 280)",
+          "oklch(95% 0.005 280)"
+        ]
+      },
+      "bg-surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "oklch(16% 0.025 280)",
+        "tonalRamp": [
+          "oklch(10% 0.02 280)",
+          "oklch(13.5% 0.02 280)",
+          "oklch(16% 0.025 280)",
+          "oklch(24% 0.02 280)",
+          "oklch(38% 0.015 280)",
+          "oklch(55% 0.01 280)",
+          "oklch(75% 0.008 280)",
+          "oklch(95% 0.005 280)"
+        ]
+      },
+      "bg-elevated": {
+        "role": "neutral",
+        "displayName": "Elevated",
+        "canonical": "oklch(20% 0.03 280)",
+        "tonalRamp": [
+          "oklch(10% 0.02 280)",
+          "oklch(13.5% 0.02 280)",
+          "oklch(16% 0.025 280)",
+          "oklch(20% 0.03 280)",
+          "oklch(38% 0.015 280)",
+          "oklch(55% 0.01 280)",
+          "oklch(75% 0.008 280)",
+          "oklch(95% 0.005 280)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Muted Violet",
+        "canonical": "oklch(63% 0.15 290)",
+        "tonalRamp": [
+          "oklch(28% 0.09 290)",
+          "oklch(38% 0.11 290)",
+          "oklch(48% 0.13 290)",
+          "oklch(56% 0.14 290)",
+          "oklch(63% 0.15 290)",
+          "oklch(72% 0.13 290)",
+          "oklch(82% 0.09 290)",
+          "oklch(91% 0.05 290)"
+        ]
+      },
+      "accent-bright": {
+        "role": "primary",
+        "displayName": "Bright Periwinkle",
+        "canonical": "oklch(73% 0.11 285)",
+        "tonalRamp": [
+          "oklch(33% 0.08 285)",
+          "oklch(43% 0.09 285)",
+          "oklch(53% 0.10 285)",
+          "oklch(63% 0.11 285)",
+          "oklch(73% 0.11 285)",
+          "oklch(81% 0.09 285)",
+          "oklch(89% 0.06 285)",
+          "oklch(96% 0.03 285)"
+        ]
+      },
+      "text-primary": {
+        "role": "neutral",
+        "displayName": "Ledger White",
+        "canonical": "oklch(96% 0.015 290)",
+        "tonalRamp": [
+          "oklch(20% 0.015 290)",
+          "oklch(35% 0.015 290)",
+          "oklch(50% 0.015 290)",
+          "oklch(65% 0.015 290)",
+          "oklch(78% 0.015 290)",
+          "oklch(88% 0.015 290)",
+          "oklch(94% 0.015 290)",
+          "oklch(96% 0.015 290)"
+        ]
+      },
+      "text-secondary": {
+        "role": "neutral",
+        "displayName": "Quiet Grey",
+        "canonical": "oklch(58% 0.03 280)",
+        "tonalRamp": [
+          "oklch(25% 0.03 280)",
+          "oklch(35% 0.03 280)",
+          "oklch(45% 0.03 280)",
+          "oklch(52% 0.03 280)",
+          "oklch(58% 0.03 280)",
+          "oklch(67% 0.025 280)",
+          "oklch(78% 0.02 280)",
+          "oklch(88% 0.015 280)"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Faint Grey",
+        "canonical": "oklch(40% 0.025 280)",
+        "tonalRamp": [
+          "oklch(20% 0.025 280)",
+          "oklch(28% 0.025 280)",
+          "oklch(34% 0.025 280)",
+          "oklch(40% 0.025 280)",
+          "oklch(48% 0.025 280)",
+          "oklch(58% 0.02 280)",
+          "oklch(70% 0.018 280)",
+          "oklch(82% 0.015 280)"
+        ]
+      },
+      "green": {
+        "role": "tertiary",
+        "displayName": "Gain Green",
+        "canonical": "oklch(78% 0.13 165)",
+        "tonalRamp": [
+          "oklch(35% 0.10 165)",
+          "oklch(45% 0.12 165)",
+          "oklch(55% 0.13 165)",
+          "oklch(65% 0.13 165)",
+          "oklch(72% 0.13 165)",
+          "oklch(78% 0.13 165)",
+          "oklch(86% 0.10 165)",
+          "oklch(94% 0.06 165)"
+        ]
+      },
+      "red": {
+        "role": "tertiary",
+        "displayName": "Loss Red",
+        "canonical": "oklch(70% 0.17 22)",
+        "tonalRamp": [
+          "oklch(35% 0.13 22)",
+          "oklch(45% 0.15 22)",
+          "oklch(55% 0.17 22)",
+          "oklch(63% 0.17 22)",
+          "oklch(70% 0.17 22)",
+          "oklch(78% 0.13 22)",
+          "oklch(86% 0.09 22)",
+          "oklch(94% 0.05 22)"
+        ]
+      },
+      "yellow": {
+        "role": "tertiary",
+        "displayName": "Watch Yellow",
+        "canonical": "oklch(83% 0.15 85)",
+        "tonalRamp": [
+          "oklch(40% 0.11 85)",
+          "oklch(52% 0.13 85)",
+          "oklch(64% 0.15 85)",
+          "oklch(74% 0.15 85)",
+          "oklch(83% 0.15 85)",
+          "oklch(89% 0.12 85)",
+          "oklch(94% 0.08 85)",
+          "oklch(98% 0.04 85)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Upload-screen hero headline only \u2014 the single loudest moment in the product."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page-level titles: auth card title, history year markers."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card and section headers (h2). Quiet \u2014 weight carries hierarchy, not size."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Transaction rows, form labels, descriptive copy. Generous line-height for long scan sessions."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Category badges, section eyebrows, pill text. The only place uppercase belongs."
+      }
+    },
+    "shadows": [
+      {
+        "name": "ambient-float",
+        "value": "0 8px 32px rgba(0,0,0,0.5)",
+        "purpose": "Dropdown menus, statement pickers, chart tooltips \u2014 signals 'floating above the page'."
+      },
+      {
+        "name": "ambient-float-deep",
+        "value": "0 8px 32px rgba(0,0,0,0.65)",
+        "purpose": "Chart tooltips and the deepest floating surfaces."
+      },
+      {
+        "name": "accent-glow-resting",
+        "value": "0 4px 18px rgba(124,111,218,0.2)",
+        "purpose": "Primary buttons and submit actions at rest \u2014 a soft halo marking 'this is the action'."
+      },
+      {
+        "name": "accent-glow-active",
+        "value": "0 0 22px rgba(124,111,218,0.2)",
+        "purpose": "Hover/focus state for primary actions \u2014 the glow widens rather than darkens."
+      },
+      {
+        "name": "accent-glow-wide",
+        "value": "0 0 40px rgba(124,111,218,0.2)",
+        "purpose": "Upload dropzone hover state \u2014 the largest glow in the system, reserved for the single primary call to action on that screen."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "ease",
+        "purpose": "Default state transitions on borders, color, and background (0.12-0.18s)."
+      },
+      {
+        "name": "ease-shake",
+        "value": "cubic-bezier(0.36,0.07,0.19,0.97)",
+        "purpose": "Auth form error shake \u2014 the system's one expressive, non-standard easing, used sparingly for a single feedback moment."
+      },
+      {
+        "name": "duration-fast",
+        "value": "0.12s",
+        "purpose": "Micro-interactions: pill hover, button active state."
+      },
+      {
+        "name": "duration-standard",
+        "value": "0.15-0.18s",
+        "purpose": "Border color shifts, glow transitions, nav underline."
+      }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Submit / primary action button \u2014 gradient fill with a resting accent glow that widens on hover.",
+      "html": "<button class=\"ds-btn-primary\">Save changes</button>",
+      "css": ".ds-btn-primary { background: linear-gradient(135deg, #7c6fda, #9b8ee8); color: #ffffff; border: none; border-radius: 10px; padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600; font-family: 'Inter', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 18px rgba(124,111,218,0.2); transition: box-shadow 0.18s, transform 0.12s; } .ds-btn-primary:hover { box-shadow: 0 0 22px rgba(124,111,218,0.2); transform: translateY(-1px); } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #7c6fda; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary navigation / utility action \u2014 flat surface fill with a hairline border that brightens on hover.",
+      "html": "<button class=\"ds-btn-ghost\">View history</button>",
+      "css": ".ds-btn-ghost { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; color: #8888aa; cursor: pointer; font-size: 0.85rem; font-weight: 500; font-family: 'Inter', system-ui, sans-serif; padding: 0.38rem 0.85rem; transition: all 0.15s; } .ds-btn-ghost:hover { background: #16162a; border-color: rgba(255,255,255,0.14); color: #f0f0fa; } .ds-btn-ghost:focus-visible { outline: 2px solid #7c6fda; outline-offset: 2px; }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The base container for tables, summaries, and panels \u2014 flat tonal surface with a hairline border that brightens on hover. No shadow at rest.",
+      "html": "<div class=\"ds-card\"><h2 class=\"ds-card-title\">Recurring charges</h2><p class=\"ds-card-body\">12 active subscriptions detected this month, totaling $186.40.</p></div>",
+      "css": ".ds-card { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 1.75rem; transition: border-color 0.15s; font-family: 'Inter', system-ui, sans-serif; } .ds-card:hover { border-color: rgba(255,255,255,0.14); } .ds-card-title { font-size: 1rem; font-weight: 600; color: #f0f0fa; margin-bottom: 0.5rem; } .ds-card-body { font-size: 0.875rem; font-weight: 500; line-height: 1.65; color: #8888aa; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Filter and form fields \u2014 sits on the elevated plane, one tone brighter than its containing card, with a direct border-color focus shift (no glow, no ring).",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Search transactions\" />",
+      "css": ".ds-input { background: #16162a; border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 0.4rem 0.75rem; color: #f0f0fa; font-size: 0.85rem; font-family: 'Inter', system-ui, sans-serif; outline: none; transition: border-color 0.15s; } .ds-input::placeholder { color: #55556a; } .ds-input:focus { border-color: rgba(124,111,218,0.5); }"
+    },
+    {
+      "name": "Category Pill",
+      "kind": "chip",
+      "refersTo": "pill",
+      "description": "Inline category label on transaction rows \u2014 15% tinted background of the category's reporting color with the full-saturation hue as text. One hue per category, never reused as chrome.",
+      "html": "<span class=\"ds-pill ds-pill--groceries\">Groceries</span>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.71rem; font-weight: 600; white-space: nowrap; font-family: 'Inter', system-ui, sans-serif; } .ds-pill--groceries { background: rgba(0,200,83,0.15); color: #00c853; }"
+    },
+    {
+      "name": "Filter Pill",
+      "kind": "chip",
+      "refersTo": "filter-pill",
+      "description": "Toggleable filter chip \u2014 surface fill with hairline border at rest; selected state shifts text to bright periwinkle and bolds, never changes the fill.",
+      "html": "<button class=\"ds-filter-pill ds-filter-pill--active\">This month</button>",
+      "css": ".ds-filter-pill { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.07); border-radius: 999px; padding: 0.28rem 0.85rem; color: #8888aa; font-size: 0.78rem; font-weight: 500; font-family: 'Inter', system-ui, sans-serif; cursor: pointer; transition: all 0.15s; } .ds-filter-pill--active { border-color: rgba(124,111,218,0.45); color: #c4b8ff; font-weight: 600; } .ds-filter-pill:focus-visible { outline: 2px solid #7c6fda; outline-offset: 2px; }"
+    },
+    {
+      "name": "Top Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Primary nav link \u2014 flat text that brightens on hover with a violet underline that scales in from the left. The system's one piece of moving chrome, reserved for navigation alone.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">Dashboard</a><a class=\"ds-nav-link\" href=\"#\">Transactions</a><a class=\"ds-nav-link\" href=\"#\">Recurring</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 1.5rem; align-items: center; } .ds-nav-link { background: none; border: none; color: #8888aa; cursor: pointer; font-size: 0.875rem; font-weight: 500; font-family: 'Inter', system-ui, sans-serif; padding: 0.25rem 0; position: relative; text-decoration: none; transition: color 0.15s; } .ds-nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1.5px; background: #7c6fda; border-radius: 999px; transform: scaleX(0); transition: transform 0.2s ease; } .ds-nav-link:hover { color: #f0f0fa; } .ds-nav-link:hover::after { transform: scaleX(1); }"
+    },
+    {
+      "name": "Transaction Row (Hover Accent)",
+      "kind": "custom",
+      "refersTo": "dash-recent-row",
+      "description": "A borderless data-table row that brightens one tonal step on hover and reveals a violet edge on its leading cell \u2014 the Tonal Depth Rule applied to tabular data.",
+      "html": "<table class=\"ds-txn-table\"><tbody><tr class=\"ds-txn-row\"><td class=\"ds-txn-edge\"><span class=\"ds-txn-date\">Jun 4</span></td><td><span class=\"ds-txn-name\">Trader Joe&#39;s</span></td><td><span class=\"ds-txn-account\">UWCU Checking</span></td><td class=\"ds-txn-amount-cell\"><span class=\"ds-txn-amount\">&minus;$48.12</span></td></tr></tbody></table>",
+      "css": ".ds-txn-table { width: 100%; border-collapse: collapse; font-family: Inter, system-ui, sans-serif; } .ds-txn-table td { padding: 0.6rem 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.85rem; vertical-align: middle; transition: background 0.1s; } .ds-txn-row:hover td { background: #16162a; } .ds-txn-edge { border-left: 2px solid transparent; transition: border-color 0.1s, background 0.1s; } .ds-txn-row:hover .ds-txn-edge { border-left-color: #7c6fda; } .ds-txn-date { color: #55556a; white-space: nowrap; } .ds-txn-name { color: #f0f0fa; } .ds-txn-account { color: #55556a; font-size: 0.78rem; } .ds-txn-amount-cell { text-align: right; } .ds-txn-amount { font-weight: 600; color: #f87171; white-space: nowrap; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Ledger",
+    "overview": "A finance tool that looks like it keeps a careful record, not one that's trying to sell you something. The surface sits in near-total darkness (#08080f) so the numbers, not the chrome, hold the user's attention during a long monthly review session. One muted violet (#7c6fda) carries every signal that matters: a focus ring, a primary action, a glow under a button. Everywhere else, the palette stays quiet, deep, and tonal, layered in three steps of near-black (base, surface, elevated) rather than dressed up with shadows or color blocking. This system explicitly rejects the gradient-hero-card, stat-tile SaaS template and the cartoon-bright consumer-budgeting look. There is no mascot energy here, no badges, no playful chart skins. Confidence comes from restraint: thin 1px borders that barely register until hover, type that holds its hierarchy through weight rather than ornament, and a single accent that earns attention by how rarely it competes for it.",
+    "keyCharacteristics": [
+      "Near-black, three-step tonal surface stack (base \u2192 surface \u2192 elevated), no pure black and no warm neutrals",
+      "One accent color (muted violet, #7c6fda) doing all the signaling work: focus, primary actions, glow, links",
+      "Flat cards with hairline borders that only brighten on hover; depth implied by tone, not shadow",
+      "Type carries hierarchy through weight and negative letter-spacing on display sizes, not decoration",
+      "Category and status color exist only inside data visualizations (charts, pills, deltas) \u2014 never as page chrome"
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Muted Violet is the only accent used for interface chrome (actions, focus, active state, glow). If a second 'brand' color appears outside of a chart or category pill, it's a mistake \u2014 route it back to violet or to a neutral.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tonal Depth Rule",
+        "body": "Depth comes from moving one step up the Void \u2192 Surface \u2192 Elevated stack, never from drop shadows on resting elements. Shadows are reserved for things that visually float above the page (menus, modals, tooltips), at 0 8px 32px rgba(0,0,0,0.5-0.65).",
+        "section": "colors"
+      },
+      {
+        "name": "The Weight-Over-Size Rule",
+        "body": "Hierarchy is built primarily through font-weight steps (500 \u2192 600 \u2192 700/800) and negative letter-spacing on display sizes, not through a wide type scale. Most of the interface lives between 0.7rem and 1rem; only the upload hero and history year markers break past 1.7rem.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float-Or-Flat Rule",
+        "body": "A surface either sits flush on the page (flat, tonal lift only) or visibly floats above it (ambient shadow). There is no in-between 'slightly raised card' \u2014 that's the lazy SaaS card-on-card look this system rejects.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the page in the three-step tonal stack (#08080f \u2192 #0f0f1a \u2192 #16162a); every surface's depth should be readable from its background alone.",
+      "Do let Muted Violet (#7c6fda) be the only chrome accent \u2014 focus rings, primary actions, active nav, glows. If it shows up twice in the same view doing two different jobs, that's the system working as intended.",
+      "Do reserve saturated color (the reporting palette and CATEGORY_COLORS) for data: charts, pills, deltas, badges. These are the only places vivid hue belongs.",
+      "Do build hierarchy with font-weight (500/600/700/800) and tight letter-spacing on display sizes, keeping the type scale narrow (0.7rem-1.7rem covers nearly everything; 4rem is reserved for the single hero moment).",
+      "Do use the Float-Or-Flat rule: flat tonal cards at rest, soft ambient shadows (0 8px 32px rgba(0,0,0,0.5-0.65)) only for things that visually float above the page."
+    ],
+    "donts": [
+      "Don't add gradient hero cards, stat-tile templates, or 'enterprise analytics' dashboard chrome \u2014 PRODUCT.md names these directly as anti-references, and this system's whole point is that it doesn't look like it's selling anything.",
+      "Don't introduce gamified, consumer-budgeting-app energy: no badges-as-rewards, no cartoon chart skins, no mascot copy, no over-friendly micro-copy. The category pills and recurring badges are informational, not playful.",
+      "Don't use border-left/border-right colored stripes as static decorative accents on cards or list rows \u2014 every card uses a full hairline border; a stripe would be the one inconsistent shape in the system. The one exception is the recent-transactions table, where the leading cell's edge sits at 2px solid transparent and only brightens to violet on row hover/focus \u2014 that's the Tonal Depth Rule's brighten-on-interaction treatment applied to a table row, not a static stripe.",
+      "Don't add drop shadows to resting cards, or stack 'card on card' \u2014 depth comes from the tonal lift (Void \u2192 Surface \u2192 Elevated), never from shadow-on-flat-surface layering.",
+      "Don't introduce a second accent hue for interface chrome. If something needs to stand out, widen the violet glow or shift weight/contrast \u2014 don't reach for a new color.",
+      "Don't push the type scale past what's already here: no fonts beyond Inter, no display sizes beyond 4rem, no letter-spacing tighter than -2.5px. The narrow scale is what keeps a data-dense surface calm."
+    ]
+  }
+}

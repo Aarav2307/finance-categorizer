@@ -81,12 +81,20 @@ export default function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, type }),
     })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.detail)
+    }
     const data = await res.json()
     setAccounts(data.accounts || [])
   }
 
   async function handleDeleteAccount(name) {
     const res = await apiFetch(`/accounts?name=${encodeURIComponent(name)}`, { method: 'DELETE' })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.detail)
+    }
     const data = await res.json()
     setAccounts(data.accounts || [])
   }
@@ -97,6 +105,10 @@ export default function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, cycle_start_day: day }),
     })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.detail)
+    }
     const data = await res.json()
     setAccounts(data.accounts || [])
   }
@@ -171,11 +183,15 @@ export default function App() {
   }
 
   async function handleCorrect(description, _oldCategory, newCategory) {
-    await apiFetch('/correct', {
+    const res = await apiFetch('/correct', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ description, category: newCategory }),
     })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.detail)
+    }
     const updated = transactions.map(t =>
       t.description === description
         ? { ...t, category: newCategory, needs_review: false, source: 'cache' }
@@ -185,11 +201,15 @@ export default function App() {
     setSummary(recomputeSummary(updated))
     await fetchCache()
     if (uploadId) {
-      await apiFetch(`/history/${uploadId}`, {
+      const histRes = await apiFetch(`/history/${uploadId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactions: updated }),
       })
+      if (!histRes.ok) {
+        const err = await histRes.json()
+        throw new Error(err.detail)
+      }
     }
   }
 
@@ -267,16 +287,24 @@ export default function App() {
   }
 
   async function handleDeleteUpload(uploadId) {
-    await apiFetch(`/history/${uploadId}`, { method: 'DELETE' })
+    const res = await apiFetch(`/history/${uploadId}`, { method: 'DELETE' })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.detail)
+    }
     setHistoryUploads(prev => prev.filter(u => u.id !== uploadId))
   }
 
   async function handleRenameLabel(uploadId, newLabel) {
-    await apiFetch(`/history/${uploadId}/label`, {
+    const res = await apiFetch(`/history/${uploadId}/label`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ label: newLabel }),
     })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.detail)
+    }
     setHistoryUploads(prev => prev.map(u => u.id === uploadId ? { ...u, label: newLabel } : u))
   }
 
@@ -392,7 +420,7 @@ export default function App() {
           <button className="back-btn" onClick={() => resultsFrom === 'history' ? handleViewHistory() : setView('upload')}>
             {resultsFrom === 'history' ? '← History' : '← Upload'}
           </button>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div className="results-nav-actions">
             <button className="nav-link" onClick={() => goToAccounts('results')}>Accounts</button>
             <button className="nav-link" onClick={handleViewHistory}>History →</button>
             {userBadge}
@@ -404,7 +432,7 @@ export default function App() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, ease: 'easeOut' }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+          className="results-content"
         >
           {uploadId === null && (
             <SpendingTrends

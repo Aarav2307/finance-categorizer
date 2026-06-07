@@ -211,9 +211,13 @@ function extractLabelMonth(label) {
 export default function TransactionTable({ transactions, onCorrect, uploadLabel, zelleAliases = {}, onSaveZelleAliases, chartFilter, accounts = [], year = null }) {
   const [editingId, setEditingId] = useState(null)
   const [editValue, setEditValue] = useState('')
+  const [savingId, setSavingId] = useState(null)
+  const [saveError, setSaveError] = useState('')
   const [flashIds, setFlashIds] = useState(new Set())
+  const [correctionNote, setCorrectionNote] = useState('')
   const [showExport, setShowExport] = useState(false)
   const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState('')
   const [filter, setFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState('all')
   const [monthFilter, setMonthFilter] = useState('')
@@ -305,8 +309,11 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
   async function handlePDF() {
     setShowExport(false)
     setExporting(true)
+    setExportError('')
     try {
       await exportPDF(uploadLabel)
+    } catch (err) {
+      setExportError(err.message || 'Could not export PDF. Try again.')
     } finally {
       setExporting(false)
     }
@@ -315,20 +322,34 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
   function startEdit(t) {
     setEditingId(t.id)
     setEditValue(t.category)
+    setSaveError('')
   }
 
   function cancelEdit() {
     setEditingId(null)
     setEditValue('')
+    setSaveError('')
   }
 
-  function handleSave(t) {
+  async function handleSave(t) {
     if (editValue === t.category) { cancelEdit(); return }
-    const matchIds = new Set(transactions.filter(x => x.description === t.description).map(x => x.id))
-    setFlashIds(matchIds)
-    setTimeout(() => setFlashIds(new Set()), 1400)
-    onCorrect(t.description, t.category, editValue)
-    cancelEdit()
+    setSavingId(t.id)
+    setSaveError('')
+    try {
+      await onCorrect(t.description, t.category, editValue)
+      const matchIds = new Set(transactions.filter(x => x.description === t.description).map(x => x.id))
+      setFlashIds(matchIds)
+      if (matchIds.size > 1) {
+        setCorrectionNote(`Updated ${matchIds.size} matching transactions`)
+        setTimeout(() => setCorrectionNote(''), 2800)
+      }
+      setTimeout(() => setFlashIds(new Set()), 1400)
+      cancelEdit()
+    } catch (err) {
+      setSaveError(err.message || 'Could not save category. Try again.')
+    } finally {
+      setSavingId(null)
+    }
   }
 
   const availableMonths = [...new Set(
@@ -435,6 +456,7 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
     <div className="table-wrap">
       <div className="table-header">
         <h2>Transactions</h2>
+        {correctionNote && <span className="correction-note" role="status">{correctionNote}</span>}
 
         <input
           className="filter-input"
@@ -446,22 +468,23 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
 
         <div className="export-dropdown-wrap" ref={dropdownRef}>
           <button
-            className="export-btn"
+            className="export-trigger"
             onClick={() => setShowExport(v => !v)}
             disabled={exporting}
           >
-            {exporting ? 'Exporting…' : '↓ Export'}
+            {exporting ? 'Exporting…' : 'Export'}
           </button>
           {showExport && (
             <div className="export-menu">
               <button onClick={() => { exportCSV(transactions); setShowExport(false) }}>
-                <span className="export-menu-icon">📄</span> CSV
+                Export as CSV
               </button>
               <button onClick={handlePDF}>
-                <span className="export-menu-icon">📊</span> PDF
+                Export as PDF
               </button>
             </div>
           )}
+          {exportError && <span className="export-error" role="alert">{exportError}</span>}
         </div>
       </div>
 
@@ -558,10 +581,15 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
             <button
               className="statement-trigger"
               onClick={() => setShowStatementMenu(v => !v)}
+              aria-expanded={showStatementMenu}
+              aria-haspopup="true"
             >
-              {statementFilter.size === 0
-                ? 'All statements'
-                : `${statementFilter.size} statement${statementFilter.size !== 1 ? 's' : ''}`} ▾
+              <span>
+                {statementFilter.size === 0
+                  ? 'All statements'
+                  : `${statementFilter.size} statement${statementFilter.size !== 1 ? 's' : ''}`}
+              </span>
+              <span className="statement-trigger-caret" aria-hidden="true" />
             </button>
             {showStatementMenu && (
               <div className="statement-menu">
@@ -599,25 +627,31 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
         <p className="billing-period-hint">{billingPeriodHint}</p>
       )}
 
+      <div className="table-scroll">
       <table>
+        <caption className="sr-only">{uploadLabel ? `Transactions for ${uploadLabel}` : 'Transactions'}</caption>
         <thead>
           <tr>
-            {hasStatements && <th>Statement</th>}
-            {hasAccounts && <th>Account</th>}
-            {hasDateData && <th>Date</th>}
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Category</th>
+            {hasStatements && <th scope="col">Statement</th>}
+            {hasAccounts && <th scope="col">Account</th>}
+            {hasDateData && <th scope="col">Date</th>}
+            <th scope="col">Description</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Category</th>
           </tr>
         </thead>
         <tbody key={uploadLabel}>
-          {filtered.length === 0 && categoryFilter ? (
+          {filtered.length === 0 ? (
             <tr>
               <td
                 colSpan={[hasStatements, hasAccounts, hasDateData, true, true, true].filter(Boolean).length}
                 className="empty-category-state"
               >
-                No {categoryFilter} transactions for this period
+                {categoryFilter
+                  ? `No ${categoryFilter} transactions for this period`
+                  : isFiltering
+                    ? 'No transactions match these filters'
+                    : 'No transactions to show'}
               </td>
             </tr>
           ) : (
@@ -638,26 +672,31 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
                 <td className={t.amount < 0 ? 'negative' : 'positive'}>
                   {t.amount < 0 ? '−' : '+'}{fmtAmt(Math.abs(t.amount))}
                 </td>
-                <td
-                  className={`category-td${editingId === t.id ? ' editing' : ''}`}
-                  onClick={() => { if (editingId !== t.id) startEdit(t) }}
-                >
+                <td className={`category-td${editingId === t.id ? ' editing' : ''}`}>
                   {editingId === t.id ? (
                     <div className="category-edit">
                       <select value={editValue} onChange={e => setEditValue(e.target.value)} autoFocus onClick={e => e.stopPropagation()}>
                         {CATEGORIES.map(c => <option key={c}>{c}</option>)}
                       </select>
-                      <button className="save-edit-btn" onClick={e => { e.stopPropagation(); handleSave(t) }}>✓</button>
-                      <button className="cancel-edit-btn" onClick={e => { e.stopPropagation(); cancelEdit() }}>✕</button>
+                      <button className="save-edit-btn" onClick={e => { e.stopPropagation(); handleSave(t) }} disabled={savingId === t.id}>
+                        {savingId === t.id ? 'Saving…' : 'Save'}
+                      </button>
+                      <button className="cancel-edit-btn" onClick={e => { e.stopPropagation(); cancelEdit() }} disabled={savingId === t.id}>Cancel</button>
+                      {saveError && <span className="label-edit-error" role="alert">{saveError}</span>}
                     </div>
                   ) : (
-                    <span className="category-cell">
+                    <button
+                      type="button"
+                      className="category-cell"
+                      onClick={() => startEdit(t)}
+                      aria-label={`Change category for ${t.display_name || t.description}, currently ${t.category}`}
+                    >
                       <span className={`cat-pill cat-pill--${categorySlug(t.category)}`}>{t.category}</span>
                       {t.recurring_frequency && (
-                        <span className="recurring-badge"><span className="recurring-icon-pulse">↻</span> {t.recurring_frequency}</span>
+                        <span className="recurring-badge"><span className="recurring-icon-pulse" aria-hidden="true" /> {t.recurring_frequency}</span>
                       )}
-                      <span className="edit-hint">✎</span>
-                    </span>
+                      <span className="edit-hint" aria-hidden="true">Edit</span>
+                    </button>
                   )}
                 </td>
               </motion.tr>
@@ -665,6 +704,7 @@ export default function TransactionTable({ transactions, onCorrect, uploadLabel,
           )}
         </tbody>
       </table>
+      </div>
 
       {hasCCPayments && (
         <div className="cc-exclusion-note">

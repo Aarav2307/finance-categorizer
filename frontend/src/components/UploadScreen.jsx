@@ -13,6 +13,7 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
   const [selectedAccount, setSelectedAccount] = useState('')  // '' = none, 'NEW' = adding new
   const [newAccountName, setNewAccountName] = useState('')
   const [newAccountType, setNewAccountType] = useState('bank')
+  const [submitting, setSubmitting] = useState(false)
 
   function handleFile(file) {
     if (file && (file.name.endsWith('.csv') || file.name.endsWith('.pdf'))) {
@@ -33,8 +34,20 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (!pending) return
+    if (!pending || submitting) return
+    setSubmitting(true)
     onUpload(pending, label, getAccountName(), getAccountType())
+  }
+
+  function openFilePicker() {
+    inputRef.current.click()
+  }
+
+  function handleDropZoneKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      openFilePicker()
+    }
   }
 
   const canSubmit = pending && (
@@ -45,9 +58,6 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
 
   return (
     <div className="upload-screen">
-      <div className="upload-glow upload-glow-1" />
-      <div className="upload-glow upload-glow-2" />
-
       <nav className="upload-nav">
         <button className="back-btn" onClick={onViewDashboard}>← Dashboard</button>
         <div className="upload-nav-right">
@@ -69,7 +79,11 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
 
         <div
           className={`drop-zone ${dragging ? 'dragging' : ''} ${pending ? 'has-file' : ''}`}
-          onClick={() => inputRef.current.click()}
+          role="button"
+          tabIndex={0}
+          aria-label={pending ? `Selected file: ${pending.name}. Press Enter to choose a different file.` : 'Choose a CSV or PDF statement to upload, or drop one here'}
+          onClick={openFilePicker}
+          onKeyDown={handleDropZoneKeyDown}
           onDragOver={e => { e.preventDefault(); setDragging(true) }}
           onDragLeave={() => setDragging(false)}
           onDrop={e => {
@@ -78,7 +92,7 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
             handleFile(e.dataTransfer.files[0])
           }}
         >
-          <div className="drop-icon-wrap">
+          <div className="drop-icon-wrap" aria-hidden="true">
             <span>{pending ? '✓' : '↑'}</span>
           </div>
           <p className="drop-text">
@@ -89,6 +103,8 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
             ref={inputRef}
             type="file"
             accept=".csv,.pdf"
+            tabIndex={-1}
+            aria-hidden="true"
             style={{ display: 'none' }}
             onChange={e => handleFile(e.target.files[0])}
           />
@@ -144,12 +160,18 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
             )}
 
             <div className="upload-meta-row">
-              <button type="submit" className="submit-btn" disabled={!canSubmit}>Categorize →</button>
+              <button type="submit" className="submit-btn" disabled={!canSubmit || submitting}>
+                {submitting ? 'Categorizing…' : 'Categorize →'}
+              </button>
             </div>
           </form>
         )}
 
-        {error && <p className="upload-error">{error}</p>}
+        {error && (
+          <div className="upload-error" role="alert">
+            <p className="upload-error-text"><strong>Could not process this statement.</strong> {error}</p>
+          </div>
+        )}
 
         <div className="upload-features">
           <span className="feat">📄 CSV & PDF</span>

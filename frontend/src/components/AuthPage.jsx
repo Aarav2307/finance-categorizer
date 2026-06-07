@@ -5,7 +5,7 @@ const BASE = 'http://localhost:8000'
 
 export default function AuthPage({ onAuth }) {
   const [mode, setMode] = useState('login')
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '' })
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '', confirmPassword: '' })
   const [error, setError] = useState(null)
   const [shakeKey, setShakeKey] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -17,6 +17,11 @@ export default function AuthPage({ onAuth }) {
 
   async function handleSubmit(e) {
     e.preventDefault()
+    if (mode === 'register' && form.password !== form.confirmPassword) {
+      setError('Passwords do not match')
+      setShakeKey(k => k + 1)
+      return
+    }
     setLoading(true)
     setError(null)
     try {
@@ -53,12 +58,14 @@ export default function AuthPage({ onAuth }) {
           <button
             className={mode === 'login' ? 'auth-tab active' : 'auth-tab'}
             onClick={() => { setMode('login'); setError(null) }}
+            disabled={loading}
           >
             Login
           </button>
           <button
             className={mode === 'register' ? 'auth-tab active' : 'auth-tab'}
             onClick={() => { setMode('register'); setError(null) }}
+            disabled={loading}
           >
             Register
           </button>
@@ -68,50 +75,97 @@ export default function AuthPage({ onAuth }) {
           {mode === 'register' && (
             <>
               <div className="form-row">
-                <input
-                  placeholder="First Name"
-                  value={form.firstName}
-                  onChange={e => update('firstName', e.target.value)}
-                  required
-                />
-                <input
-                  placeholder="Last Name"
-                  value={form.lastName}
-                  onChange={e => update('lastName', e.target.value)}
-                  required
-                />
+                <div className="auth-field">
+                  <label htmlFor="firstName" className="auth-field-label">First name</label>
+                  <input
+                    id="firstName"
+                    autoComplete="given-name"
+                    value={form.firstName}
+                    onChange={e => update('firstName', e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="auth-field">
+                  <label htmlFor="lastName" className="auth-field-label">Last name</label>
+                  <input
+                    id="lastName"
+                    autoComplete="family-name"
+                    value={form.lastName}
+                    onChange={e => update('lastName', e.target.value)}
+                    required
+                  />
+                </div>
               </div>
-              <input
-                type="tel"
-                placeholder="Phone Number (optional)"
-                value={form.phone}
-                onChange={e => update('phone', e.target.value)}
-              />
+              <div className="auth-field">
+                <label htmlFor="phone" className="auth-field-label">Phone number <span className="auth-field-optional">(optional)</span></label>
+                <input
+                  id="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder="(555) 123-4567"
+                  value={form.phone}
+                  onChange={e => update('phone', e.target.value)}
+                />
+                <p className="auth-field-hint">Used only for account recovery. Never shared, never leaves this device.</p>
+              </div>
             </>
           )}
 
-          <input
-            type="email"
-            className={error ? 'input-error' : ''}
-            placeholder="Email"
-            value={form.email}
-            onChange={e => update('email', e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            className={error ? 'input-error' : ''}
-            placeholder="Password"
-            value={form.password}
-            onChange={e => update('password', e.target.value)}
-            required
-            minLength={6}
-          />
+          <div className="auth-field">
+            <label htmlFor="email" className="auth-field-label">Email</label>
+            <input
+              id="email"
+              type="email"
+              className={error ? 'input-error' : ''}
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={form.email}
+              onChange={e => update('email', e.target.value)}
+              aria-describedby={error ? 'auth-error' : undefined}
+              aria-invalid={error ? 'true' : 'false'}
+              required
+            />
+          </div>
 
-          {error && <p className="error">{error}</p>}
+          <div className="auth-field">
+            <label htmlFor="password" className="auth-field-label">Password</label>
+            <input
+              id="password"
+              type="password"
+              className={error ? 'input-error' : ''}
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+              value={form.password}
+              onChange={e => update('password', e.target.value)}
+              aria-describedby={mode === 'register' ? 'password-hint' : (error ? 'auth-error' : undefined)}
+              aria-invalid={error ? 'true' : 'false'}
+              required
+              minLength={6}
+            />
+            {mode === 'register' && <p id="password-hint" className="auth-field-hint">At least 6 characters.</p>}
+          </div>
+
+          {mode === 'register' && (
+            <div className="auth-field">
+              <label htmlFor="confirmPassword" className="auth-field-label">Confirm password</label>
+              <input
+                id="confirmPassword"
+                type="password"
+                className={error ? 'input-error' : ''}
+                autoComplete="new-password"
+                value={form.confirmPassword}
+                onChange={e => update('confirmPassword', e.target.value)}
+                aria-describedby={error ? 'auth-error' : undefined}
+                aria-invalid={error ? 'true' : 'false'}
+                required
+                minLength={6}
+              />
+            </div>
+          )}
+
+          {error && <p id="auth-error" className="error" role="alert">{error}</p>}
 
           <button type="submit" className="auth-submit" disabled={loading}>
-            {loading ? 'Please wait…' : mode === 'login' ? 'Login' : 'Create Account'}
+            {loading ? (mode === 'login' ? 'Signing in…' : 'Creating your account…') : mode === 'login' ? 'Login' : 'Create Account'}
           </button>
         </form>
       </div>

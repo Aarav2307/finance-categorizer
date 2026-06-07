@@ -14,43 +14,96 @@ export default function AccountsView({ accounts, onAdd, onDelete, onBack, onUpda
   const [newName, setNewName] = useState('')
   const [newType, setNewType] = useState('bank')
   const [showForm, setShowForm] = useState(false)
+  const [adding, setAdding] = useState(false)
+  const [addError, setAddError] = useState('')
+
   const [editingCycle, setEditingCycle] = useState(null)
   const [cycleValue, setCycleValue] = useState('')
+  const [savingCycle, setSavingCycle] = useState(null)
+  const [cycleError, setCycleError] = useState('')
+
+  const [confirmDeleteName, setConfirmDeleteName] = useState(null)
+  const [deletingName, setDeletingName] = useState(null)
+  const [deleteError, setDeleteError] = useState('')
 
   async function handleAdd(e) {
     e.preventDefault()
-    if (!newName.trim()) return
-    await onAdd(newName.trim(), newType)
-    setNewName('')
-    setNewType('bank')
-    setShowForm(false)
+    const trimmed = newName.trim()
+    if (!trimmed || adding) return
+    setAdding(true)
+    setAddError('')
+    try {
+      await onAdd(trimmed, newType)
+      setNewName('')
+      setNewType('bank')
+      setShowForm(false)
+    } catch (err) {
+      setAddError(err.message || 'Could not add account. Try again.')
+    } finally {
+      setAdding(false)
+    }
   }
 
   function cancelForm() {
     setShowForm(false)
     setNewName('')
     setNewType('bank')
+    setAddError('')
   }
 
   function startCycleEdit(a) {
+    setConfirmDeleteName(null)
     setEditingCycle(a.name)
     setCycleValue(a.cycle_start_day != null ? String(a.cycle_start_day) : '')
+    setCycleError('')
   }
 
-  function saveCycle(name) {
-    const trimmed = cycleValue.trim()
-    if (trimmed === '') {
-      onUpdateCycle(name, null)
-    } else {
-      const val = parseInt(trimmed, 10)
-      if (!isNaN(val) && val >= 1 && val <= 28) onUpdateCycle(name, val)
-    }
+  function cancelCycleEdit() {
     setEditingCycle(null)
+    setCycleError('')
+  }
+
+  async function saveCycle(name) {
+    const trimmed = cycleValue.trim()
+    let day = null
+    if (trimmed !== '') {
+      day = parseInt(trimmed, 10)
+      if (isNaN(day) || day < 1 || day > 28) {
+        setCycleError('Enter a day between 1 and 28')
+        return
+      }
+    }
+    setSavingCycle(name)
+    setCycleError('')
+    try {
+      await onUpdateCycle(name, day)
+      setEditingCycle(null)
+    } catch (err) {
+      setCycleError(err.message || 'Could not save. Try again.')
+    } finally {
+      setSavingCycle(null)
+    }
   }
 
   function handleCycleKeyDown(e, name) {
-    if (e.key === 'Enter') saveCycle(name)
-    if (e.key === 'Escape') setEditingCycle(null)
+    if (e.key === 'Enter')  saveCycle(name)
+    if (e.key === 'Escape') cancelCycleEdit()
+  }
+
+  function askDelete(name)  { setEditingCycle(null); setDeleteError(''); setConfirmDeleteName(name) }
+  function cancelDelete()   { setConfirmDeleteName(null); setDeleteError('') }
+
+  async function confirmDelete(name) {
+    setDeletingName(name)
+    setDeleteError('')
+    try {
+      await onDelete(name)
+      setConfirmDeleteName(null)
+    } catch (err) {
+      setDeleteError(err.message || 'Could not remove. Try again.')
+    } finally {
+      setDeletingName(null)
+    }
   }
 
   return (
@@ -91,20 +144,17 @@ export default function AccountsView({ accounts, onAdd, onDelete, onBack, onUpda
                         className="cycle-input"
                         value={cycleValue}
                         placeholder="1–28"
-                        onChange={e => setCycleValue(e.target.value)}
-                        onBlur={() => saveCycle(a.name)}
+                        aria-label={`Billing cycle day for ${a.name}, 1 to 28`}
+                        onChange={e => { setCycleValue(e.target.value); setCycleError('') }}
                         onKeyDown={e => handleCycleKeyDown(e, a.name)}
                         autoFocus
                       />
                       <span className="cycle-edit-label">th of each month</span>
-                      <button
-                        className="cycle-save-btn"
-                        onMouseDown={e => { e.preventDefault(); saveCycle(a.name) }}
-                      >Save</button>
-                      <button
-                        className="cycle-cancel-btn"
-                        onMouseDown={e => { e.preventDefault(); setEditingCycle(null) }}
-                      >Cancel</button>
+                      <button className="save-edit-btn" onClick={() => saveCycle(a.name)} disabled={savingCycle === a.name}>
+                        {savingCycle === a.name ? 'Saving…' : 'Save'}
+                      </button>
+                      <button className="cancel-edit-btn" onClick={cancelCycleEdit} disabled={savingCycle === a.name}>Cancel</button>
+                      {cycleError && <span className="label-edit-error" role="alert">{cycleError}</span>}
                     </div>
                   ) : (
                     <button className="cycle-badge" onClick={() => startCycleEdit(a)}>
@@ -112,16 +162,29 @@ export default function AccountsView({ accounts, onAdd, onDelete, onBack, onUpda
                         ? `Bills on the ${ordinal(a.cycle_start_day)} of each month`
                         : 'Billing cycle — not set'
                       }
-                      <span className="cycle-pencil">✎</span>
+                      <span className="cycle-pencil" aria-hidden="true">✎</span>
                     </button>
                   )
                 )}
               </div>
-              <button
-                className="account-delete-btn"
-                onClick={() => onDelete(a.name)}
-                title={`Remove ${a.name}`}
-              >✕</button>
+              {confirmDeleteName === a.name ? (
+                <span className="delete-confirm">
+                  <span className="delete-confirm-label">Remove this account?</span>
+                  <button className="confirm-delete-btn" onClick={() => confirmDelete(a.name)} disabled={deletingName === a.name}>
+                    {deletingName === a.name ? 'Removing…' : 'Remove'}
+                  </button>
+                  <button className="cancel-edit-btn" onClick={cancelDelete} disabled={deletingName === a.name}>Cancel</button>
+                  {deleteError && <span className="label-edit-error" role="alert">{deleteError}</span>}
+                </span>
+              ) : (
+                <button
+                  className="account-delete-btn"
+                  onClick={() => askDelete(a.name)}
+                  aria-label={`Remove account "${a.name}"`}
+                >
+                  <span aria-hidden="true">✕</span>
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -133,7 +196,7 @@ export default function AccountsView({ accounts, onAdd, onDelete, onBack, onUpda
               type="text"
               placeholder="Account name (e.g. Chase Checking)"
               value={newName}
-              onChange={e => setNewName(e.target.value)}
+              onChange={e => { setNewName(e.target.value); setAddError('') }}
               autoFocus
             />
             <div className="account-type-toggle">
@@ -146,9 +209,12 @@ export default function AccountsView({ accounts, onAdd, onDelete, onBack, onUpda
                 Credit card
               </label>
             </div>
+            {addError && <span className="label-edit-error" role="alert">{addError}</span>}
             <div className="add-account-actions">
-              <button type="submit" className="submit-btn" disabled={!newName.trim()}>Add account</button>
-              <button type="button" className="cancel-btn" onClick={cancelForm}>Cancel</button>
+              <button type="submit" className="submit-btn" disabled={!newName.trim() || adding}>
+                {adding ? 'Adding…' : 'Add account'}
+              </button>
+              <button type="button" className="cancel-btn" onClick={cancelForm} disabled={adding}>Cancel</button>
             </div>
           </form>
         ) : (

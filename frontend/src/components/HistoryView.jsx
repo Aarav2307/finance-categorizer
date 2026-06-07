@@ -17,16 +17,27 @@ export default function HistoryView({ uploads, onView, onDelete, onViewDashboard
   const [editingId, setEditingId] = useState(null)
   const [editValue, setEditValue]   = useState('')
   const [editError, setEditError]   = useState('')
+  const [savingId, setSavingId]     = useState(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
+  const [deletingId, setDeletingId] = useState(null)
+  const [deleteError, setDeleteError] = useState('')
 
-  function startEdit(u)  { setEditingId(u.id); setEditValue(u.label); setEditError('') }
+  function startEdit(u)  { setConfirmDeleteId(null); setEditingId(u.id); setEditValue(u.label); setEditError('') }
   function cancelEdit()  { setEditingId(null);  setEditValue('');      setEditError('') }
 
   async function saveEdit(id) {
     const trimmed = editValue.trim()
     if (!trimmed)           { setEditError('Label cannot be empty');               return }
     if (trimmed.length > 50){ setEditError('Label must be 50 characters or fewer'); return }
-    await onRenameLabel(id, trimmed)
-    cancelEdit()
+    setSavingId(id)
+    try {
+      await onRenameLabel(id, trimmed)
+      cancelEdit()
+    } catch (e) {
+      setEditError(e.message || 'Could not save. Try again.')
+    } finally {
+      setSavingId(null)
+    }
   }
 
   function handleKeyDown(e, id) {
@@ -34,10 +45,26 @@ export default function HistoryView({ uploads, onView, onDelete, onViewDashboard
     if (e.key === 'Escape') cancelEdit()
   }
 
+  function askDelete(id)  { setEditingId(null); setDeleteError(''); setConfirmDeleteId(id) }
+  function cancelDelete() { setConfirmDeleteId(null); setDeleteError('') }
+
+  async function confirmDelete(id) {
+    setDeletingId(id)
+    setDeleteError('')
+    try {
+      await onDelete(id)
+      setConfirmDeleteId(null)
+    } catch (e) {
+      setDeleteError(e.message || 'Could not delete. Try again.')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   // ── Nav ────────────────────────────────────────────────────────────────────
   const nav = (
     <div className="history-nav">
-      <button className="back-btn" onClick={onViewDashboard}>← Dashboard</button>
+      <button className="back-btn" onClick={onViewDashboard} aria-label="Back to dashboard">← Dashboard</button>
       <span className="history-nav-title">History</span>
       <div />
     </div>
@@ -49,7 +76,6 @@ export default function HistoryView({ uploads, onView, onDelete, onViewDashboard
         {nav}
         <motion.div className="history-body" {...pageTransition}>
           <div className="history-empty">
-            <div className="history-empty-icon">🗂</div>
             <p>No uploads yet. Categorize a statement and it will appear here.</p>
           </div>
         </motion.div>
@@ -173,16 +199,23 @@ export default function HistoryView({ uploads, onView, onDelete, onViewDashboard
                                   onKeyDown={e => handleKeyDown(e, u.id)}
                                 />
                                 <span className="label-edit-actions">
-                                  <button className="save-edit-btn" onClick={() => saveEdit(u.id)}>Save</button>
-                                  <button className="cancel-edit-btn" onClick={cancelEdit}>Cancel</button>
+                                  <button className="save-edit-btn" onClick={() => saveEdit(u.id)} disabled={savingId === u.id}>
+                                    {savingId === u.id ? 'Saving…' : 'Save'}
+                                  </button>
+                                  <button className="cancel-edit-btn" onClick={cancelEdit} disabled={savingId === u.id}>Cancel</button>
                                 </span>
-                                {editError && <span className="label-edit-error">{editError}</span>}
+                                {editError && <span className="label-edit-error" role="alert">{editError}</span>}
                               </span>
                             ) : (
-                              <span className="label-display" onClick={() => startEdit(u)}>
+                              <button
+                                type="button"
+                                className="label-display"
+                                onClick={() => startEdit(u)}
+                                aria-label={`Rename statement "${u.label}"`}
+                              >
                                 <span className="history-label-text">{u.label}</span>
-                                <span className="label-pencil" title="Rename">✎</span>
-                              </span>
+                                <span className="label-pencil" aria-hidden="true">✎</span>
+                              </button>
                             )}
                           </div>
                           <div className="history-row-meta">
@@ -192,8 +225,27 @@ export default function HistoryView({ uploads, onView, onDelete, onViewDashboard
                             <span className="history-row-count">{u.transaction_count} txns</span>
                           </div>
                           <div className="history-row-actions">
-                            <button className="history-view-btn" onClick={() => onView(u.id)}>View →</button>
-                            <button className="history-delete-btn" onClick={() => onDelete(u.id)}>✕</button>
+                            {confirmDeleteId === u.id ? (
+                              <span className="delete-confirm">
+                                <span className="delete-confirm-label">Delete this statement?</span>
+                                <button className="confirm-delete-btn" onClick={() => confirmDelete(u.id)} disabled={deletingId === u.id}>
+                                  {deletingId === u.id ? 'Deleting…' : 'Delete'}
+                                </button>
+                                <button className="cancel-edit-btn" onClick={cancelDelete} disabled={deletingId === u.id}>Cancel</button>
+                                {deleteError && <span className="label-edit-error" role="alert">{deleteError}</span>}
+                              </span>
+                            ) : (
+                              <>
+                                <button className="history-view-btn" onClick={() => onView(u.id)}>View →</button>
+                                <button
+                                  className="history-delete-btn"
+                                  onClick={() => askDelete(u.id)}
+                                  aria-label={`Delete statement "${u.label}"`}
+                                >
+                                  <span aria-hidden="true">✕</span>
+                                </button>
+                              </>
+                            )}
                           </div>
                         </div>
                       ))}
