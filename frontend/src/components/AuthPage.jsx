@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { setAuth } from '../api'
-
-const BASE = 'http://localhost:8000'
+import { setAuth, apiFetch } from '../api'
 
 export default function AuthPage({ onAuth }) {
   const [mode, setMode] = useState('login')
@@ -30,7 +28,7 @@ export default function AuthPage({ onAuth }) {
         ? { first_name: form.firstName, last_name: form.lastName, email: form.email, phone: form.phone, password: form.password }
         : { email: form.email, password: form.password }
 
-      const res = await fetch(`${BASE}${endpoint}`, {
+      const res = await apiFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

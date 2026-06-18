@@ -1,8 +1,10 @@
+import { RefreshCw, Receipt, BarChart3, Repeat, CreditCard } from 'lucide-react'
+
 const TYPE_ICON = {
-  subscription:  '🔄',
-  fixed_bill:    '📋',
-  variable_bill: '📊',
-  frequent:      '🔁',
+  subscription:  RefreshCw,
+  fixed_bill:    Receipt,
+  variable_bill: BarChart3,
+  frequent:      Repeat,
 }
 
 const TYPE_LABEL = {
@@ -26,9 +28,10 @@ function formatDate(iso) {
 }
 
 function RecurringRow({ p }) {
+  const Icon = TYPE_ICON[p.type] || CreditCard
   return (
     <div className="recurring-row">
-      <span className="recurring-icon">{TYPE_ICON[p.type] || '💳'}</span>
+      <span className="recurring-icon" aria-hidden="true"><Icon size={15} /></span>
 
       <div className="recurring-info">
         <span className="recurring-name">{p.display_name}</span>

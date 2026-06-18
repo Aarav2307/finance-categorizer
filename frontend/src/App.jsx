@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { AlertTriangle } from 'lucide-react'
 import { apiFetch, getUser, clearAuth } from './api'
 import AuthPage from './components/AuthPage'
 import UploadScreen from './components/UploadScreen'
@@ -12,6 +13,7 @@ import AccountsView from './components/AccountsView'
 import MigrationView from './components/MigrationView'
 import SpendingTrends from './components/SpendingTrends'
 import DashboardView from './components/DashboardView'
+import CategorizingSkeleton from './components/CategorizingSkeleton'
 
 export default function App() {
   const [user, setUser] = useState(getUser())
@@ -319,7 +321,7 @@ export default function App() {
   }
 
   if (loading) {
-    return <div className="loading">Categorizing transactions…</div>
+    return <CategorizingSkeleton />
   }
 
   // ── Shared elements ────────────────────────────────────────────────────────
@@ -333,7 +335,7 @@ export default function App() {
 
   const migrationBanner = orphanedCount > 0 && view !== 'migration' && (
     <div className="migration-banner" onClick={() => setView('migration')}>
-      <span className="migration-banner-icon">⚠️</span>
+      <AlertTriangle size={15} aria-hidden="true" className="migration-banner-icon" />
       <span>
         {orphanedCount} transaction{orphanedCount !== 1 ? 's' : ''} have no account assigned.
       </span>

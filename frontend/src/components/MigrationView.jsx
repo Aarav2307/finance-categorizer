@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CheckCircle2 } from 'lucide-react'
 
 export default function MigrationView({ orphanedUploads, accounts, onSave, onBack, onAddAccount }) {
   const [selections, setSelections] = useState({})
@@ -39,7 +40,7 @@ export default function MigrationView({ orphanedUploads, accounts, onSave, onBac
       <div className="migration-view">
         <div className="migration-success-wrap">
           <div className="migration-success">
-            <div className="migration-success-icon">✓</div>
+            <div className="migration-success-icon" aria-hidden="true"><CheckCircle2 size={28} /></div>
             <h2>{confirmation} transaction{confirmation !== 1 ? 's' : ''} assigned</h2>
             <p>All selected uploads have been linked to their accounts.</p>
             <button className="submit-btn" onClick={onBack}>Done</button>

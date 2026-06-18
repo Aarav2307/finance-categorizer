@@ -112,7 +112,7 @@ body::before {
   z-index: 2;
 }
 .upload-badge {
-  display: inline-block;
+  display: inline-flex; align-items: center; gap: 0.4rem;
   background: var(--accent-glow);
   border: 1px solid rgba(124,111,218,0.28);
   border-radius: 20px;
@@ -204,7 +204,7 @@ body::before {
 .upload-error-text { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5; margin: 0; }
 .upload-error-text strong { color: var(--red); font-weight: 600; }
 .upload-features { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
-.feat { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+.feat { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; display: inline-flex; align-items: center; gap: 0.35rem; }
 .feat-divider { width: 1px; height: 12px; background: rgba(255,255,255,0.12); }
 
 /* ── History page ── */
@@ -460,6 +460,49 @@ body::before {
   min-height: 100vh; gap: 0.75rem;
   font-size: 0.95rem; color: var(--text-muted); letter-spacing: 0.02em;
 }
+
+/* ── Categorizing skeleton ── */
+.categorizing-skeleton {
+  max-width: 980px; margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+  display: flex; flex-direction: column; gap: 1.5rem;
+}
+.categorizing-status {
+  font-size: 0.875rem; color: var(--text-muted); letter-spacing: 0.02em;
+  text-align: center; margin-bottom: -0.5rem;
+}
+.skel-header { display: flex; justify-content: space-between; align-items: center; }
+.skel-header-right { display: flex; gap: 0.75rem; align-items: center; }
+.skel-back   { height: 24px; width: 72px;  border-radius: 6px; }
+.skel-pill   { height: 28px; width: 80px;  border-radius: 8px; }
+.skel-avatar { height: 32px; width: 32px;  border-radius: 50%; }
+.skel-title  { height: 36px; width: 260px; border-radius: 8px; }
+.skel-stat-row { display: flex; gap: 1.5rem; }
+.skel-stat-card {
+  flex: 1; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem;
+}
+.skel-stat-inner { height: 72px; border-radius: 8px; }
+.skel-table-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem;
+}
+.skel-table-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.25rem;
+}
+.skel-table-title { height: 20px; width: 110px; border-radius: 5px; }
+.skel-search      { height: 34px; width: 200px; border-radius: 8px; }
+.skel-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.skel-row:last-child { border-bottom: none; }
+.skel-cell-date { height: 15px; width: 68px;  border-radius: 4px; flex-shrink: 0; }
+.skel-cell-desc { height: 15px; flex: 1;       border-radius: 4px; }
+.skel-cell-cat  { height: 22px; width: 76px;  border-radius: 999px; flex-shrink: 0; }
+.skel-cell-amt  { height: 15px; width: 58px;  border-radius: 4px; flex-shrink: 0; }
 
 /* ── Results page ── */
 .results-page {
@@ -934,7 +977,7 @@ select option { background: var(--bg-elevated); color: var(--text-primary); }
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .recurring-row:last-child { border-bottom: none; }
-.recurring-icon { font-size: 1.1rem; flex-shrink: 0; width: 1.5rem; text-align: center; }
+.recurring-icon { flex-shrink: 0; width: 1.5rem; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
 
 .recurring-info { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
 .recurring-name { font-size: 0.88rem; color: var(--text-primary); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1426,7 +1469,7 @@ select option { background: var(--bg-elevated); color: var(--text-primary); }
   position: sticky; top: 0; z-index: 50;
 }
 .migration-banner:hover { background: rgba(251,191,36,0.15); }
-.migration-banner-icon { font-size: 1rem; }
+.migration-banner-icon { flex-shrink: 0; color: #fcd34d; }
 .migration-banner-cta {
   margin-left: auto; color: #fcd34d; font-weight: 600;
   text-decoration: underline; text-underline-offset: 2px;

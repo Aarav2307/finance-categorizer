@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { FileText, Sparkles, Lock, UploadCloud, CheckCircle2 } from 'lucide-react'
 
 function defaultLabel() {
   return new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
@@ -68,7 +69,7 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
       </nav>
 
       <motion.div className="upload-hero" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, ease: 'easeOut' }}>
-        <div className="upload-badge">✦ AI-Powered · Runs Locally</div>
+        <div className="upload-badge"><Sparkles size={11} aria-hidden="true" /> AI-Powered · Runs Locally</div>
 
         <h1 className="upload-title">Understand your<br/>money instantly.</h1>
 
@@ -93,7 +94,7 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
           }}
         >
           <div className="drop-icon-wrap" aria-hidden="true">
-            <span>{pending ? '✓' : '↑'}</span>
+            {pending ? <CheckCircle2 size={24} /> : <UploadCloud size={24} />}
           </div>
           <p className="drop-text">
             {pending ? pending.name : 'Drop your CSV or PDF here'}
@@ -174,11 +175,11 @@ export default function UploadScreen({ onUpload, onViewHistory, onViewAccounts, 
         )}
 
         <div className="upload-features">
-          <span className="feat">📄 CSV & PDF</span>
+          <span className="feat"><FileText size={13} aria-hidden="true" /> CSV & PDF</span>
           <span className="feat-divider" />
-          <span className="feat">🤖 AI categorized</span>
+          <span className="feat"><Sparkles size={13} aria-hidden="true" /> AI categorized</span>
           <span className="feat-divider" />
-          <span className="feat">🔒 Runs locally</span>
+          <span className="feat"><Lock size={13} aria-hidden="true" /> Runs locally</span>
         </div>
       </motion.div>
     </div>
